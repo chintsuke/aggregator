@@ -1,14 +1,10 @@
-# 存储设置：依然发往你的 Gist
 storage:
   type: gist
   id: ${GIST_ID}
   token: ${GIST_TOKEN}
-  filename: nodes.yaml
+  filename: gistfile1.txt
 
-# 抓取设置：开启全速模式
-# 不设 node_filter，抓到什么要什么
 filter:
-  delay_filter: 5000  # 只要不是完全不通（2秒内有响应）的都要
-  
-# 自动筛选：剔除一些明显的垃圾广告节点名
+  delay_filter: 3000
+
 exclude_remarks: ["网站", "地址", "发布"]
