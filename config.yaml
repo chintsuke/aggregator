@@ -3,7 +3,7 @@ storage:
   type: gist
   id: ${GIST_ID}
   token: ${GIST_TOKEN}
-  filename: my_nodes.yaml
+  filename: gistfile1.txt
 
 # 抓取设置：开启全速模式
 # 不设 node_filter，抓到什么要什么
