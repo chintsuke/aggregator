@@ -24,4 +24,4 @@ jobs:
           GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
           GIST_ID: ${{ secrets.GIST_ID }}
         # 暂时去掉 -s 参数，先保证基础运行通畅
-        run: python subscribe/collect.py --config config.yaml
+        run: python subscribe/collect.py config.yaml -s
