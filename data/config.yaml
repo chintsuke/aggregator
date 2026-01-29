@@ -14,8 +14,13 @@ subscribes:
   - url: https://raw.githubusercontent.com/maka-pro/maka-pro.github.io/main/clash.yaml
   - url: https://raw.githubusercontent.com/ermaozi/get_node/main/clash.yaml
   - url: https://raw.githubusercontent.com/ripaojiedian/freenode/main/clash.yaml
+  - url: https://raw.githubusercontent.com/tiannanyihe/Aggregator/main/data/proxies.yaml
+  - url: https://raw.githubusercontent.com/v82543886/free-ss/main/v2ray.txt
+  - url: https://raw.githubusercontent.com/freefq/free/master/v2
+  - url: https://raw.githubusercontent.com/ripaojiedian/freenode/main/clash.yaml
+  - url: https://raw.githubusercontent.com/maka-pro/maka-pro.github.io/main/clash.yaml
   
 filter:
-  delay_filter: 0  # 稍微放宽到5秒，确保先能看到东西
+  delay_filter: 5000  # 稍微放宽到5秒，确保先能看到东西
 
 exclude_remarks: ["网站", "地址", "发布"]
