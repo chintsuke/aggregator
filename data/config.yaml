@@ -4,7 +4,12 @@ storage:
   token: ${GIST_TOKEN}
   filename: gistfile1.txt
 
+# 新增：直接订阅稳定的节点池
+subscribes:
+  - url: https://raw.githubusercontent.com/freefq/free/master/v2
+  - url: https://raw.githubusercontent.com/v82543886/free-ss/main/v2ray.txt
+
 filter:
-  delay_filter: 3000
+  delay_filter: 5000  # 稍微放宽到5秒，确保先能看到东西
 
 exclude_remarks: ["网站", "地址", "发布"]
