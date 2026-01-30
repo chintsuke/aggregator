@@ -24,4 +24,6 @@ jobs:
           GIST_TOKEN: ${{ secrets.GIST_TOKEN }}
           GIST_ID: ${{ secrets.GIST_ID }}
         # 终极命令：不带任何文件名参数，脚本会自动去 data/config.yaml 找
-        run: python subscribe/collect.py
+        run: |
+          # 运行脚本并上传至 Gist
+          python subscribe/collect.py -g $MY_GIST -k $MY_TOKEN -t clash vray singbox
