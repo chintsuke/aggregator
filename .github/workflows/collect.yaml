@@ -26,4 +26,4 @@ jobs:
           GIST_LINK: ${{ secrets.GIST_ID }}     # 格式应为: 用户名/GistID
         run: |
           # 命令里必须带上 -g 和 -k 参数，确保它强行执行推送逻辑
-          python subscribe/collect.py -g ${{ secrets.GIST_ID }} -k ${{ secrets.GIST_TOKEN }} -t clash vray singbox --skip
+          python subscribe/collect.py -g ${{ secrets.GIST_ID }} -k ${{ secrets.GIST_TOKEN }} -t clash v2ray singbox --skip
