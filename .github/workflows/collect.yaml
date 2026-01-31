@@ -2,6 +2,7 @@ name: Collect
 on:
   workflow_dispatch:
   schedule:
+    # 建议保持每 6 小时运行一次，或改为每天固定时间
     - cron: '0 */6 * * *'
 
 jobs:
@@ -21,9 +22,9 @@ jobs:
 
       - name: Run Aggregator
         env:
-          # 必须用这三个名字，代码里写死了只认这三个！
-          GIST_PAT: ${{ secrets.GIST_TOKEN }}  # 这里对应你仓库里存的 Secret 名字
-          GIST_LINK: ${{ secrets.GIST_ID }}     # 格式应为: 用户名/GistID
+          GIST_PAT: ${{ secrets.GIST_TOKEN }}
+          GIST_LINK: ${{ secrets.GIST_ID }}
         run: |
-          # 命令里必须带上 -g 和 -k 参数，确保它强行执行推送逻辑
-          python subscribe/collect.py -g ${{ secrets.GIST_ID }} -k ${{ secrets.GIST_TOKEN }} -t clash v2ray singbox --skip
+          # 增量修改：末尾增加了 --all 参数
+          # --all 会指示脚本生成包含 URL-Test (自动优选) 策略组的完整 Clash 配置文件
+          python subscribe/collect.py -g ${{ secrets.GIST_ID }} -k ${{ secrets.GIST_TOKEN }} -t clash v2ray singbox --skip --all
