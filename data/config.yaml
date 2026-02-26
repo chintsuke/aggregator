@@ -21,6 +21,6 @@ subscribes:
   - url: https://raw.githubusercontent.com/maka-pro/maka-pro.github.io/main/clash.yaml
   
 filter:
-  delay_filter: 1300  # 稍微放宽到5秒，确保先能看到东西
+  delay_filter: 800  # 稍微放宽到5秒，确保先能看到东西
 
 exclude_remarks: ["网站", "地址", "发布"]
