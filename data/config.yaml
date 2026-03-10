@@ -23,4 +23,4 @@ subscribes:
 filter:
   delay_filter: 800  # 稍微放宽到5秒，确保先能看到东西
 
-exclude_remarks: ["网站", "地址", "发布"]
+exclude_remarks: ["网站", "地址", "发布", "香港"]
