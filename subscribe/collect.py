@@ -31,6 +31,19 @@ PATH = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
 DATA_BASE = os.path.join(PATH, "data")
 
+# 排除香港节点的正则表达式
+HK_PATTERN = re.compile(r"香港|HK|Hong\s*Kong|HongKong|🇭🇰", re.IGNORECASE)
+
+
+def filter_hk_nodes(proxies: list) -> list:
+    """过滤掉香港节点"""
+    before = len(proxies)
+    filtered = [p for p in proxies if isinstance(p, dict) and not HK_PATTERN.search(p.get("name", ""))]
+    after = len(filtered)
+    if before != after:
+        logger.info(f"filtered out {before - after} Hong Kong nodes, remaining: {after}")
+    return filtered
+
 
 def assign(
     bin_name: str,
@@ -244,10 +257,16 @@ def aggregate(args: argparse.Namespace) -> None:
         os.remove(generate_conf)
 
     results = utils.multi_thread_run(func=workflow.executewrapper, tasks=tasks, num_threads=args.num)
-    proxies = list(itertools.chain.from_iterable([x[1] for x in results if x]))
+    proxies = list(itertools.chain.from_iterable([x for x in results if x]))
 
     if len(proxies) == 0:
         logger.error("exit because cannot fetch any proxy node")
+        sys.exit(0)
+
+    # 过滤香港节点
+    proxies = filter_hk_nodes(proxies)
+    if len(proxies) == 0:
+        logger.error("exit because all proxies are Hong Kong nodes")
         sys.exit(0)
 
     nodes, workspace = [], os.path.join(PATH, "clash")
@@ -423,7 +442,7 @@ class CustomHelpFormatter(argparse.HelpFormatter):
                 if action.nargs != 0 and action.option_strings != ["-t", "--targets"]:
                     default = action.dest.upper()
                     args_string = self._format_args(action, default)
-                    parts[-1] += " " + args_string
+                    parts += " " + args_string
             else:
                 args_string = self._format_args(action, action.dest)
                 parts.append(args_string)
