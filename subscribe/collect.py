@@ -364,3 +364,4 @@ def aggregate(args: argparse.Namespace) -> None:
         if subconverter.convert(binname=subconverter_bin, artifact=t[0]):
             filepath = os.path.join(DATA_BASE, t[1])
             shutil.mo
+...(truncated)...
