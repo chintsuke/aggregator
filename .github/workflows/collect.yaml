@@ -2,7 +2,6 @@ name: Collect
 on:
   workflow_dispatch:
   schedule:
-    # 建议保持每 6 小时运行一次，或改为每天固定时间
     - cron: '0 */6 * * *'
 
 jobs:
@@ -25,5 +24,6 @@ jobs:
           GIST_PAT: ${{ secrets.GIST_TOKEN }}
           GIST_LINK: ${{ secrets.GIST_ID }}
         run: |
-          # 移除 --skip，添加 -d 3000 限制最大延迟3秒
-          python subscribe/collect.py -g ${{ secrets.GIST_ID }} -k ${{ secrets.GIST_TOKEN }} -t clash v2ray singbox -d 3000 --all 
+          # -d 2000: 延迟超过2秒的节点丢弃
+          # timeout 3000: API等待最多3秒
+          python subscribe/collect.py -g ${{ secrets.GIST_ID }} -k ${{ secrets.GIST_TOKEN }} -t clash v2ray singbox -d 2000 --all
