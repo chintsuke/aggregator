@@ -21,6 +21,19 @@ subscribes:
   - url: https://raw.githubusercontent.com/maka-pro/maka-pro.github.io/main/clash.yaml
   
 filter:
-  delay_filter: 800  # 稍微放宽到5秒，确保先能看到东西
+  # 云端测速（美国服务器视角），建议设严一点，比如 300，能稍微砍掉一些绝对的死节点
+  delay_filter: 300  
 
-exclude_remarks: ["网站", "地址", "发布", "香港"]
+  # 【核心修改】把所有香港的别名、Emoji、英文全部加进去，彻底封杀
+  exclude_remarks: 
+    - "网站"
+    - "地址"
+    - "发布"
+    - "香港"
+    - "港"
+    - "HK"
+    - "H.K"
+    - "HongKong"
+    - "Hong Kong"
+    - "🇭🇰"
+    - "回国"  # 通常回国节点无法翻墙，建议一并干掉
