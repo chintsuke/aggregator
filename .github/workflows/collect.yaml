@@ -25,6 +25,5 @@ jobs:
           GIST_PAT: ${{ secrets.GIST_TOKEN }}
           GIST_LINK: ${{ secrets.GIST_ID }}
         run: |
-          # 增量修改：末尾增加了 --all 参数
-          # --all 会指示脚本生成包含 URL-Test (自动优选) 策略组的完整 Clash 配置文件
-          python subscribe/collect.py -g ${{ secrets.GIST_ID }} -k ${{ secrets.GIST_TOKEN }} -t clash v2ray singbox --skip --all
+          # 移除 --skip，添加 -d 3000 限制最大延迟3秒
+          python subscribe/collect.py -g ${{ secrets.GIST_ID }} -k ${{ secrets.GIST_TOKEN }} -t clash v2ray singbox -d 3000 --all 
