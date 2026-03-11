@@ -32,11 +32,13 @@ PATH = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 DATA_BASE = os.path.join(PATH, "data")
 
 # 排除香港节点的正则表达式
-HK_PATTERN = re.compile(r"香港|HK|Hong\s*Kong|HongKong|🇭🇰", re.IGNORECASE)
+HK_PATTERN = re.compile(r"香港|HK|H\.K|HongKong|Hong\s*Kong|🇭🇰|回国", re.IGNORECASE)
 
 
 def filter_hk_nodes(proxies: list) -> list:
     """过滤掉香港节点"""
+    if not proxies:
+        return []
     before = len(proxies)
     filtered = [p for p in proxies if isinstance(p, dict) and not HK_PATTERN.search(p.get("name", ""))]
     after = len(filtered)
@@ -257,16 +259,16 @@ def aggregate(args: argparse.Namespace) -> None:
         os.remove(generate_conf)
 
     results = utils.multi_thread_run(func=workflow.executewrapper, tasks=tasks, num_threads=args.num)
-    proxies = list(itertools.chain.from_iterable([x for x in results if x]))
+    proxies = list(itertools.chain.from_iterable([x[1] for x in results if x]))
 
     if len(proxies) == 0:
         logger.error("exit because cannot fetch any proxy node")
         sys.exit(0)
 
-    # 过滤香港节点
+    # 过滤香港节点（在测试前先过滤）
     proxies = filter_hk_nodes(proxies)
     if len(proxies) == 0:
-        logger.error("exit because all proxies are Hong Kong nodes")
+        logger.error("exit because all proxies are Hong Kong nodes after filtering")
         sys.exit(0)
 
     nodes, workspace = [], os.path.join(PATH, "clash")
@@ -361,258 +363,4 @@ def aggregate(args: argparse.Namespace) -> None:
 
         if subconverter.convert(binname=subconverter_bin, artifact=t[0]):
             filepath = os.path.join(DATA_BASE, t[1])
-            shutil.move(os.path.join(PATH, "subconverter", t[1]), filepath)
-
-            records[t[1]] = filepath
-
-    if len(records) > 0:
-        os.remove(supplier)
-    else:
-        logger.error(f"all targets convert failed, you can view the temporary file: {supplier}")
-        sys.exit(1)
-
-    logger.info(f"found {len(nodes)} proxies, save it to {list(records.values())}")
-
-    life, traffic = max(0, args.life), max(0, args.flow)
-    if life > 0 or traffic > 0:
-        # 过滤出新的订阅并检查剩余流量和过期时间是否满足要求
-        new_subscriptions = [x for x in urls if x not in old_subscriptions]
-
-        tasks = [[x, 2, traffic, life, 0, True] for x in new_subscriptions]
-        results = utils.multi_thread_run(
-            func=crawl.check_status,
-            tasks=tasks,
-            num_threads=args.num,
-            show_progress=display,
-        )
-
-        total = len(urls)
-
-        # 筛选出为符合要求的订阅
-        urls = [new_subscriptions[i] for i in range(len(new_subscriptions)) if results[i][0] and not results[i][1]]
-        discard = len(tasks) - len(urls)
-
-        # 合并新老订阅
-        urls.extend(list(old_subscriptions))
-
-        logger.info(f"filter subscriptions finished, total: {total}, found: {len(urls)}, discard: {discard}")
-
-    utils.write_file(filename=os.path.join(DATA_BASE, subscribes_file), lines=urls)
-    domains = [utils.extract_domain(url=x, include_protocal=True) for x in urls]
-
-    # 保存实际可使用的网站列表
-    utils.write_file(filename=os.path.join(DATA_BASE, "valid-domains.txt"), lines=list(set(domains)))
-
-    # 如有必要，上传至 Gist
-    if gist_id and access_token:
-        files, config = {}, {"gistid": gist_id, "filename": list(records.keys())[0]}
-
-        for k, v in records.items():
-            if os.path.exists(v) and os.path.isfile(v):
-                with open(v, "r", encoding="utf8") as f:
-                    lines = utils.trim(f.read())
-                    if lines:
-                        files[k] = {"content": lines, "filename": k}
-
-        if urls:
-            files[subscribes_file] = {"content": "\n".join(urls), "filename": subscribes_file}
-
-        if files:
-            push_client = push.PushToGist(token=access_token)
-
-            # 上传
-            success = push_client.push_to(content="", config=config, payload={"files": files}, group="collect")
-            if success:
-                logger.info(f"upload proxies and subscriptions to gist successed")
-            else:
-                logger.error(f"upload proxies and subscriptions to gist failed")
-
-    # 清理工作空间
-    workflow.cleanup(workspace, [])
-
-
-class CustomHelpFormatter(argparse.HelpFormatter):
-    def _format_action_invocation(self, action):
-        if action.choices:
-            parts = []
-            if action.option_strings:
-                parts.extend(action.option_strings)
-
-                # 移除使用帮助信息中 -t 或 --targets 附带的过长的可选项信息
-                if action.nargs != 0 and action.option_strings != ["-t", "--targets"]:
-                    default = action.dest.upper()
-                    args_string = self._format_args(action, default)
-                    parts += " " + args_string
-            else:
-                args_string = self._format_args(action, action.dest)
-                parts.append(args_string)
-            return ", ".join(parts)
-        else:
-            return super()._format_action_invocation(action)
-
-
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(formatter_class=CustomHelpFormatter)
-    parser.add_argument(
-        "-a",
-        "--all",
-        dest="all",
-        action="store_true",
-        default=False,
-        help="generate full configuration for clash",
-    )
-
-    parser.add_argument(
-        "-c",
-        "--chuck",
-        dest="chuck",
-        action="store_true",
-        default=False,
-        help="discard candidate sites that may require human-authentication",
-    )
-
-    parser.add_argument(
-        "-d",
-        "--delay",
-        type=int,
-        required=False,
-        default=5000,
-        help="proxies max delay allowed",
-    )
-
-    parser.add_argument(
-        "-e",
-        "--easygoing",
-        dest="easygoing",
-        action="store_true",
-        default=False,
-        help="try registering with a gmail alias when you encounter a whitelisted mailbox",
-    )
-
-    parser.add_argument(
-        "-f",
-        "--flow",
-        type=int,
-        required=False,
-        default=0,
-        help="remaining traffic available for use, unit: GB",
-    )
-
-    parser.add_argument(
-        "-g",
-        "--gist",
-        type=str,
-        required=False,
-        default=os.environ.get("GIST_LINK", ""),
-        help="github username and gist id, separated by '/'",
-    )
-
-    parser.add_argument(
-        "-i",
-        "--invisible",
-        dest="invisible",
-        action="store_true",
-        default=False,
-        help="don't show check progress bar",
-    )
-
-    parser.add_argument(
-        "-k",
-        "--key",
-        type=str,
-        required=False,
-        default=os.environ.get("GIST_PAT", ""),
-        help="github personal access token for editing gist",
-    )
-
-    parser.add_argument(
-        "-l",
-        "--life",
-        type=int,
-        required=False,
-        default=0,
-        help="remaining life time, unit: hours",
-    )
-
-    parser.add_argument(
-        "-n",
-        "--num",
-        type=int,
-        required=False,
-        default=64,
-        help="threads num for check proxy",
-    )
-
-    parser.add_argument(
-        "-o",
-        "--overwrite",
-        dest="overwrite",
-        action="store_true",
-        default=False,
-        help="overwrite domains",
-    )
-
-    parser.add_argument(
-        "-p",
-        "--pages",
-        type=int,
-        required=False,
-        default=sys.maxsize,
-        help="max page number when crawling telegram",
-    )
-
-    parser.add_argument(
-        "-r",
-        "--refresh",
-        dest="refresh",
-        action="store_true",
-        default=False,
-        help="refresh and remove expired proxies with existing subscriptions",
-    )
-
-    parser.add_argument(
-        "-s",
-        "--skip",
-        dest="skip",
-        action="store_true",
-        default=False,
-        help="skip usability checks",
-    )
-
-    parser.add_argument(
-        "-t",
-        "--targets",
-        nargs="+",
-        choices=subconverter.CONVERT_TARGETS,
-        default=["clash", "v2ray", "singbox"],
-        help=f"choose one or more generated profile type. default to clash, v2ray and singbox. supported: {subconverter.CONVERT_TARGETS}",
-    )
-
-    parser.add_argument(
-        "-u",
-        "--url",
-        type=str,
-        required=False,
-        default="https://www.google.com/generate_204",
-        help="test url",
-    )
-
-    parser.add_argument(
-        "-v",
-        "--vitiate",
-        dest="vitiate",
-        action="store_true",
-        default=False,
-        help="ignoring default proxies filter rules",
-    )
-
-    parser.add_argument(
-        "-y",
-        "--yourself",
-        type=str,
-        required=False,
-        default=os.environ.get("CUSTOMIZE_LINK", ""),
-        help="the url to the list of airports that you maintain yourself",
-    )
-
-    aggregate(args=parser.parse_args())
+            shutil.mo
