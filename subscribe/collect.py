@@ -189,7 +189,7 @@ def aggregate(args: argparse.Namespace) -> None:
         process = subprocess.Popen([binpath, "-d", workspace, "-f", os.path.join(workspace, confif_file)])
         logger.info(f"clash start success, begin check proxies, num: {len(proxies)}")
         time.sleep(random.randint(3, 6))
-        params = [[p, clash.EXTERNAL_CONTROLLER, 5000, args.url, args.delay, False] for p in proxies if isinstance(p, dict)]
+        params = [[p, clash.EXTERNAL_CONTROLLER, 3000, args.url, args.delay, False] for p in proxies if isinstance(p, dict)]
         masks = utils.multi_thread_run(func=clash.check, tasks=params, num_threads=args.num, show_progress=display)
         try:
             process.terminate()
