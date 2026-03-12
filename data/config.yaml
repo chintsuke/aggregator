@@ -21,8 +21,8 @@ subscribes:
   - url: https://raw.githubusercontent.com/maka-pro/maka-pro.github.io/main/clash.yaml
   
 filter:
-  # 云端测速（美国服务器视角），建议设严一点，比如 300，能稍微砍掉一些绝对的死节点
-  delay_filter: 300  
+  # 延迟超过800ms的节点丢弃（更严格，从delay_filter改为delay以匹配代码）
+  delay: 800  
 
   # 【核心修改】把所有香港的别名、Emoji、英文全部加进去，彻底封杀
   exclude_remarks: 
