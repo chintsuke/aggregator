@@ -4,7 +4,6 @@ storage:
   token: ${GIST_TOKEN}
   filename: gistfile1.txt
 
-# 新增：直接订阅稳定的节点池
 subscribes:
   - url: https://raw.githubusercontent.com/freefq/free/master/v2
   - url: https://raw.githubusercontent.com/v82543886/free-ss/main/v2ray.txt
@@ -21,10 +20,8 @@ subscribes:
   - url: https://raw.githubusercontent.com/maka-pro/maka-pro.github.io/main/clash.yaml
   
 filter:
-  # 延迟超过800ms的节点丢弃（更严格，从delay_filter改为delay以匹配代码）
-  delay: 800  
+  delay: 300
 
-  # 【核心修改】把所有香港的别名、Emoji、英文全部加进去，彻底封杀
   exclude_remarks: 
     - "网站"
     - "地址"
@@ -36,4 +33,4 @@ filter:
     - "HongKong"
     - "Hong Kong"
     - "🇭🇰"
-    - "回国"  # 通常回国节点无法翻墙，建议一并干掉
+    - "回国"
