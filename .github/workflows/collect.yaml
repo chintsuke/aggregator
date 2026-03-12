@@ -24,6 +24,6 @@ jobs:
           GIST_PAT: ${{ secrets.GIST_TOKEN }}
           GIST_LINK: ${{ secrets.GIST_ID }}
         run: |
-          # -d 2000: 延迟超过2秒的节点丢弃
+          # -d 800: 延迟超过800ms的节点丢弃（更严格）
           # timeout 3000: API等待最多3秒
-          python subscribe/collect.py -g ${{ secrets.GIST_ID }} -k ${{ secrets.GIST_TOKEN }} -t clash v2ray singbox -d 2000 --all
+          python subscribe/collect.py -g ${{ secrets.GIST_ID }} -k ${{ secrets.GIST_TOKEN }} -t clash v2ray singbox -d 800 --all
