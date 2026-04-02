@@ -32,19 +32,6 @@ PATH = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 DATA_BASE = os.path.join(PATH, "data")
 
 # 排除香港节点的正则表达式
-HK_PATTERN = re.compile(r"香港|HK|H\.K|HongKong|Hong\s*Kong|🇭🇰|回国", re.IGNORECASE)
-
-
-def filter_hk_nodes(proxies: list) -> list:
-    """过滤掉香港节点"""
-    if not proxies:
-        return []
-    before = len(proxies)
-    filtered = [p for p in proxies if isinstance(p, dict) and not HK_PATTERN.search(p.get("name", ""))]
-    after = len(filtered)
-    if before != after:
-        logger.info(f"filtered out {before - after} Hong Kong nodes, remaining: {after}")
-    return filtered
 
 
 def assign(
@@ -173,7 +160,6 @@ def aggregate(args: argparse.Namespace) -> None:
         logger.error("exit because cannot fetch any proxy node")
         sys.exit(0)
     # 过滤香港节点（在测试前先过滤）
-    proxies = filter_hk_nodes(proxies)
     if len(proxies) == 0:
         logger.error("exit because all proxies are Hong Kong nodes after filtering")
         sys.exit(0)
