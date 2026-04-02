@@ -31,7 +31,6 @@ PATH = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
 DATA_BASE = os.path.join(PATH, "data")
 
-# 排除香港节点的正则表达式
 
 
 def assign(
@@ -159,10 +158,7 @@ def aggregate(args: argparse.Namespace) -> None:
     if len(proxies) == 0:
         logger.error("exit because cannot fetch any proxy node")
         sys.exit(0)
-    # 过滤香港节点（在测试前先过滤）
     if len(proxies) == 0:
-        logger.error("exit because all proxies are Hong Kong nodes after filtering")
-        sys.exit(0)
     nodes, workspace = [], os.path.join(PATH, "clash")
     if args.skip:
         nodes = clash.filter_proxies(proxies).get("proxies", [])
