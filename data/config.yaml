@@ -3,34 +3,23 @@ storage:
   id: ${GIST_ID}
   token: ${GIST_TOKEN}
   filename: gistfile1.txt
-
 subscribes:
-  - url: https://raw.githubusercontent.com/freefq/free/master/v2
-  - url: https://raw.githubusercontent.com/v82543886/free-ss/main/v2ray.txt
-  - url: https://raw.githubusercontent.com/tiannanyihe/Aggregator/main/data/proxies.yaml
-  - url: https://raw.githubusercontent.com/asfghjkl159/proxies/main/proxies.yaml
-  - url: https://raw.githubusercontent.com/peasoft/NoobS-6/main/clash.yaml
-  - url: https://raw.githubusercontent.com/maka-pro/maka-pro.github.io/main/clash.yaml
-  - url: https://raw.githubusercontent.com/ermaozi/get_node/main/clash.yaml
-  - url: https://raw.githubusercontent.com/ripaojiedian/freenode/main/clash.yaml
-  - url: https://raw.githubusercontent.com/tiannanyihe/Aggregator/main/data/proxies.yaml
-  - url: https://raw.githubusercontent.com/v82543886/free-ss/main/v2ray.txt
-  - url: https://raw.githubusercontent.com/freefq/free/master/v2
-  - url: https://raw.githubusercontent.com/ripaojiedian/freenode/main/clash.yaml
-  - url: https://raw.githubusercontent.com/maka-pro/maka-pro.github.io/main/clash.yaml
-  
+- url: https://raw.githubusercontent.com/freefq/free/master/v2
+- url: https://raw.githubusercontent.com/v82543886/free-ss/main/v2ray.txt
+- url: https://raw.githubusercontent.com/tiannanyihe/Aggregator/main/data/proxies.yaml
+- url: https://raw.githubusercontent.com/asfghjkl159/proxies/main/proxies.yaml
+- url: https://raw.githubusercontent.com/peasoft/NoobS-6/main/clash.yaml
+- url: https://raw.githubusercontent.com/maka-pro/maka-pro.github.io/main/clash.yaml
+- url: https://raw.githubusercontent.com/ermaozi/get_node/main/clash.yaml
+- url: https://raw.githubusercontent.com/ripaojiedian/freenode/main/clash.yaml
+- url: https://raw.githubusercontent.com/tiannanyihe/Aggregator/main/data/proxies.yaml
+- url: https://raw.githubusercontent.com/v82543886/free-ss/main/v2ray.txt
+- url: https://raw.githubusercontent.com/freefq/free/master/v2
+- url: https://raw.githubusercontent.com/ripaojiedian/freenode/main/clash.yaml
+- url: https://raw.githubusercontent.com/maka-pro/maka-pro.github.io/main/clash.yaml
 filter:
   delay: 300
-
-  exclude_remarks: 
-    - "网站"
-    - "地址"
-    - "发布"
-    - "香港"
-    - "港"
-    - "HK"
-    - "H.K"
-    - "HongKong"
-    - "Hong Kong"
-    - "🇭🇰"
-    - "回国"
+  exclude_remarks:
+  - 网站
+  - 地址
+  - 发布
