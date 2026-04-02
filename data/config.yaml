@@ -12,11 +12,8 @@ subscribes:
 - url: https://raw.githubusercontent.com/maka-pro/maka-pro.github.io/main/clash.yaml
 - url: https://raw.githubusercontent.com/ermaozi/get_node/main/clash.yaml
 - url: https://raw.githubusercontent.com/ripaojiedian/freenode/main/clash.yaml
-- url: https://raw.githubusercontent.com/tiannanyihe/Aggregator/main/data/proxies.yaml
-- url: https://raw.githubusercontent.com/v82543886/free-ss/main/v2ray.txt
-- url: https://raw.githubusercontent.com/freefq/free/master/v2
-- url: https://raw.githubusercontent.com/ripaojiedian/freenode/main/clash.yaml
-- url: https://raw.githubusercontent.com/maka-pro/maka-pro.github.io/main/clash.yaml
+- url: https://raw.githubusercontent.com/mfuu/v2ray/main/clash.yaml
+- url: https://raw.githubusercontent.com/alanbobsama/one-subscribe/main/clash.yaml
 filter:
   delay: 300
   exclude_remarks:
