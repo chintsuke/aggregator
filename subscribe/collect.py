@@ -158,7 +158,6 @@ def aggregate(args: argparse.Namespace) -> None:
     if len(proxies) == 0:
         logger.error("exit because cannot fetch any proxy node")
         sys.exit(0)
-    if len(proxies) == 0:
     nodes, workspace = [], os.path.join(PATH, "clash")
     if args.skip:
         nodes = clash.filter_proxies(proxies).get("proxies", [])
