@@ -24,4 +24,4 @@ jobs:
           GIST_PAT: ${{ secrets.GIST_TOKEN }}
           GIST_LINK: ${{ secrets.GIST_ID }}
         run: |
-          python subscribe/collect.py -g ${{ secrets.GIST_ID }} -k ${{ secrets.GIST_TOKEN }} -t clash v2ray singbox -d 300 --all
+          python subscribe/collect.py -g ${{ secrets.GIST_ID }} -k ${{ secrets.GIST_TOKEN }} -t clash v2ray singbox -d 300 --all -y https://raw.githubusercontent.com/mfuu/v2ray/main/clash.yaml
